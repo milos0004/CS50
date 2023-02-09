@@ -1,0 +1,147 @@
+.header{
+    display: flex;
+    color: saddlebrown;
+    font-size:large;
+    justify-content: space-between;
+  }
+  .header > div {
+    margin: 15px;
+    flex-shrink: 0;
+  }
+
+  .rightheader > a,.leftheader > a {
+    color: rgb(219, 216, 211);
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+  }
+  
+
+body {
+    background-color: #202124;
+    text-align: center;
+    color: rgb(219, 216, 211);
+}
+
+h1{
+    font-family:Arial, Helvetica, sans-serif;
+}
+.container{
+  padding-top:8%;
+  position:relative;
+    margin:0px auto;
+    width: 300px;
+  }
+.bottom-right {
+    color: rgb(125, 187, 247);
+    position: relative; 
+    top: -25px;
+    text-align: right;
+    font-size:20px;
+    font-weight: lighter;
+    font-family:Arial, Helvetica, sans-serif;
+  }
+ 
+  .gridheader{
+    display:grid;
+    padding: 20%;
+    grid-column-gap: 20px;
+    grid-row-gap: 10px;
+    grid-template-columns: auto 100 100;
+  }
+
+  a{
+    text-decoration: none;
+    color: blue;
+  }
+  .searchbutton{
+    color: white;
+    background-color: #303134;
+    border-radius: 5px;
+    border: 1px solid #303134;
+    padding:10px;
+    margin: 10px;
+  }
+
+  .textbox{
+    background-color: inherit;
+    width:550px;
+    border-radius: 25px;
+    border: 1px solid #707070;
+    padding:10px;
+    margin: 10px;
+    color:white;
+    height: 20px;
+  }
+  .advanced{
+    padding-left: 30px;
+    text-align: left;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+  .searchbutton-adv{
+    color:    rgb(219, 216, 211);
+    background-color:#4d90fe;
+    border: 0px;
+    border-radius: 2px;
+    border-color: #3079ed;;
+    padding:10px;
+    margin: 10px;
+    position: inherit;
+    text-align: right;
+    
+  }
+  .adv-col2{
+    display: inline-block;
+    width:190px;
+    font-size: 14px;
+    position: relative;
+    min-width: 190px;
+    max-width: 190px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+  .adv-col6 {
+    height: 25px;
+    
+    width: 525px;
+    flex-grow: 0;
+    flex-shrink: 300px;
+  }
+  .adv-textbox{
+    background-color: rgb(52, 52, 52);
+    border-radius: 1px;
+    border: 1px solid #707070;
+    color:white;
+    min-width: 130px;
+    width:95%;
+    
+  }
+
+  .adv-col4{
+    display: inline-block;
+    width:525px;
+    max-width:525px;
+    font-size: 14px;
+    position: relative;
+    flex-grow: 0;
+    flex-shrink: 0;
+    color: #8a8989;
+  }
+
+  .adv-row > div{
+    display: inline-block;
+  }
+  .adv-row {
+    display: flex;
+    height: 40px;
+  }
+  
+  @media (max-width:1300px){
+    .adv-col4{
+      visibility:hidden;
+      width:0px;
+    }
+  }
+

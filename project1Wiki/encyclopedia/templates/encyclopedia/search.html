@@ -1,0 +1,19 @@
+{% extends "encyclopedia/layout.html" %}
+{% block title %}
+    Search
+{% endblock %}
+
+{% block body %}
+    <h1>All Pages containing: {{request}}</h1>
+
+
+    <ul>
+        {% for e in entries %}
+            <li>
+                <a href="/wiki/{{e}}">{{e}}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+
+{% endblock %}

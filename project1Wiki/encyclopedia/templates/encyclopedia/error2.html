@@ -1,0 +1,12 @@
+{% extends "encyclopedia/layout.html" %}
+
+
+{% block title %}
+    {{ request }} not found
+{% endblock %}
+
+{% block body %}
+<h1>Error</h1>
+<h5>The page name: "{{ request }}" that you have entered already exists. Please try a different page name.</h5>
+<a href={{new}}>Go Back</a>
+{% endblock %}

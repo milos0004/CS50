@@ -18,7 +18,7 @@ class Listing(models.Model):
 class Bid(models.Model):
     currentBid = models.IntegerField()
     bidIncrement = models.IntegerField()
-
+    #hi
     pass
 
 class Comment(models.Model):

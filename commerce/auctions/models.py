@@ -13,7 +13,7 @@ class User(AbstractUser):
 class Listing(models.Model):
     listingTitle = models.CharField(max_length=64)
     listingDescription = models.CharField(max_length=512)
-    startBid = models.IntegerField()
+
     imageURL = models.URLField()
     listingCategory = models.CharField(max_length=10, choices=Categories)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
@@ -21,9 +21,10 @@ class Listing(models.Model):
     
 
 class Bid(models.Model):
+    startBid = models.IntegerField(default="1")
+    bidIncrement = models.IntegerField(default="1")
+    bidListing = models.OneToOneField(Listing, on_delete=models.CASCADE, default="1")
     currentBid = models.IntegerField()
-    bidIncrement = models.IntegerField()
-    bidListing = models.ForeignKey(Listing, on_delete=models.CASCADE, default="1")
     currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
 
 

@@ -2,16 +2,21 @@
 
 {% block body %}
     <h2>Active Listings</h2>
+       {% for listing in listings %}
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link"  href = "{{listing.id}}">{{listing.listingTitle}}</a>
+            </li>
 
-    
-    {% for listing in listings %}
-        <li>
-            <a href = "{{listing.id}}">{{listing.listingTitle}}</href>
-                <br>{{listing.listingDescription}}
-                <br>currentBid here
-                <br>image here
-                <br>
-                <br>
+            <li class="nav-item">
+                {{listing.listingDescription}}
+            </li>
+            <li class="nav-item">
+                currentBid here
+            </li>
+            <li class="nav-item">
+                <img src={{listing.imageURL}} width="50px"> <br>
+            </li>
         </li>
 
     {% endfor %}

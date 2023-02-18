@@ -2,5 +2,14 @@
 
 {% block body %}
     <h2>Watchlist</h2>
-
+    {% for listing in usersWatchlist %}
+    <li>
+        <a href = "{% url 'listing' listing.listingID.id %}">{{listing.listingID}}</href>
+            <br>{{listing.listingID.listingDescription}}
+            <br>currentBid here
+            <br>image here
+            <br>
+            <br>
+    </li>
+    {% endfor %}
 {% endblock %}

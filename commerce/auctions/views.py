@@ -24,8 +24,10 @@ def watchlist(request):
            w = WatchList(listingID=listing,userID=request.user)
            w.save()   
            return render(request, "auctions/listing.html", {"listing":listing, "w":True})
-        
-    return render(request, "auctions/watchlist.html", {})
+    
+    usersWatchlist = WatchList.objects.filter(userID=request.user)
+ 
+    return render(request, "auctions/watchlist.html", {"usersWatchlist":usersWatchlist})
 
 def listing(request,listing):
     try:

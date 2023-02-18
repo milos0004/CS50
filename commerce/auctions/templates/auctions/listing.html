@@ -1,0 +1,42 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{listing.listingTitle}}</h2>
+    <h6>{{listing.listingDescription}}</h6>
+    <img src={{listing.imageURL}}} width="300px"> <br>
+    Current Bid: £{{bid.currentBid}}
+    <br>
+    User with the current Bid: {{bid.currentBidUser}}
+    <br><br>
+    {% if user.is_authenticated %}
+        <form action="{% url 'listing' listing.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" autofocus type="number" width="100px" name="newBid" placeholder="Enter Your Bid Here">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Submit Bid">
+        </form>
+        <br>
+
+        <form method="post" action="{% url 'watchlist' %}" class="inline">
+            {% csrf_token %}
+            <input type="hidden" name="thelistingid" value={{listing.id}}>
+
+            {% if w %}
+                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                    Remove from Watchlist
+                </button>
+            {% else %}
+                <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                    Add Listing to Your Watchlist
+                </button>
+            {% endif %}
+
+        </form>
+    {% else %}   
+    <h6>Sign In to be able to bid on this Listing, and/or add it to your watchlist.</h6> 
+
+    {% endif %}
+    <h3>Comments</h3>
+    comments here
+{% endblock %}

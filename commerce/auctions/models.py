@@ -8,7 +8,7 @@ Categories = (
 )
 class User(AbstractUser):
     pass
-    
+
 
 class Listing(models.Model):
     listingTitle = models.CharField(max_length=64)
@@ -18,15 +18,22 @@ class Listing(models.Model):
     listingCategory = models.CharField(max_length=10, choices=Categories)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
     #watchlist = models.ManyToManyField(User, blank=True, related_name="watchlist")
+    def __str__(self):
+        return f"{self.listingTitle} - {self.listingCategory}"
     
+class WatchList(models.Model):
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
+    listingID = models.ForeignKey(Listing, on_delete=models.CASCADE, default="1")
+
 
 class Bid(models.Model):
     startBid = models.IntegerField(default="1")
-    bidIncrement = models.IntegerField(default="1")
+    #bidIncrement = models.IntegerField(default="1")
     bidListing = models.OneToOneField(Listing, on_delete=models.CASCADE, default="1")
     currentBid = models.IntegerField()
     currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
-
+    def __str__(self):
+        return f"{self.bidListing.listingTitle} - £{self.currentBid}"
 
 class Comment(models.Model):
     commentText = models.CharField(max_length=512, null=True)

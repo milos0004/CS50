@@ -5,5 +5,34 @@
     <h2>New Listing</h2>
 
 
+    <form action="{% url 'new' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="listingTitle" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" name="listingDescription" rows="10" cols="30" placeholder="Description of the Listing"></textarea>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="url" name="imageURL" placeholder="URL for image of the Listing">
+        </div>
+        <div class="form-group">
+            <select name="listingCategory" size="9" multiple>
+                <option value="home">Home</option>
+                <option value="technology">Technology</option>
+                <option value="garden">Garden</option>
+                <option value="appliances">Appliances</option>
+                <option value="toys">Toys</option>
+                <option value="clothing">Clothing</option>
+                <option value="sports">Sports</option>
+                <option value="health">Health</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="number" name="startBid" placeholder="Starting Price of Listing (in £)">
+        </div>
 
+        <input class="btn btn-primary" type="submit" value="Create Listing">
+    </form>
 {% endblock %}

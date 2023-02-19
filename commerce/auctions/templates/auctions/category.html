@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{category}}</h2>
+    {% for listing in listings %}
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link"  href = "{{listing.id}}">{{listing.listingTitle}}</a>
+        </li>
+
+        <li class="nav-item">
+            {{listing.listingDescription}}
+        </li>
+        <li class="nav-item">
+            currentBid here
+        </li>
+        {% if listing.imageURL %}
+            <li class="nav-item">
+                <img src={{listing.imageURL}} width="50px">
+            </li>
+        {% endif %}
+        
+    </li>
+    <br>
+    {% endfor %}
+    {% if not listing %}
+        No Listings currently in the {{category}} category
+    {% endif %}
+{% endblock %}

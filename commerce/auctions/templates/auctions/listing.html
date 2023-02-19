@@ -3,7 +3,9 @@
 {% block body %}
     <h2>{{listing.listingTitle}}</h2>
     <h6>{{listing.listingDescription}}</h6>
-    <img src={{listing.imageURL}}} width="300px"> <br>
+    {% if listing.imageURL %}
+        <img src={{listing.imageURL}}} width="300px"> <br>
+    {% endif %}
     Current Bid: £{{bid.currentBid}}
     <br>
     User with the current Bid: {{bid.currentBidUser}}
@@ -12,6 +14,10 @@
         <form action="{% url 'listing' listing.id %}" method="post">
             {% csrf_token %}
             <div class="form-group">
+                {% if error %}
+                    <h6 style="color: red;">{{error}}</h6>
+                    <br>
+                {% endif %}
                 <input class="form-control" autofocus type="number" width="100px" name="newBid" placeholder="Enter Your Bid Here">
             </div>
             <input class="btn btn-primary" type="submit" value="Submit Bid">
@@ -33,10 +39,30 @@
             {% endif %}
 
         </form>
+        {% if listing.creator == request.user %}
+            <br>
+            End auction
+
+        {% endif %}
     {% else %}   
     <h6>Sign In to be able to bid on this Listing, and/or add it to your watchlist.</h6> 
 
     {% endif %}
     <h3>Comments</h3>
-    comments here
+    <form action="{% url 'listing' listing.id %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" width="100px" name="userComment" placeholder="Write Your Comment Here">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit Comment">
+    </form>
+    <br>
+    {% if comments %}
+        {% for c in comments %}
+           {{c.commentText}} - {{c.user}} at {{c.commentTime}}<br>
+        {% endfor %}
+
+    {% else %}
+        No Comments on this Listing yet.
+    {% endif %}
 {% endblock %}

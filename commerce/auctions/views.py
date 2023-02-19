@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import datetime
 
 from .models import *
 
@@ -10,6 +11,16 @@ from .models import *
 def index(request):
     listings = Listing.objects.all()
     return render(request, "auctions/index.html", {"listings":listings})
+
+def categories(request):
+    Categ = ('home', 'technology', 'garden','appliances', 'toys','clothing','sports','health','other')
+    listings = Listing.objects.all()
+    return render(request, "auctions/categories.html", {"listings":listings, "categories":Categ})
+
+def category(request,category):
+    
+    listings = Listing.objects.filter(listingCategory=category)
+    return render(request, "auctions/category.html", {"listings":listings, "category":category})
 
 def watchlist(request):
     if request.method == "POST":
@@ -37,14 +48,22 @@ def listing(request,listing):
         w=False
     b = Bid.objects.get(bidListing=listing)
     l = Listing.objects.get(pk=listing)
+    c = Comment.objects.filter(listing=listing)
     if request.method == "POST":
-        newBid = request.POST["newBid"]
-        if (b.currentBid < int(newBid)):
-            b.currentBid = int(newBid)
-            b.currentBidUser = request.user
-            b.save()
+        if (request.POST["userComment"]):
+            newComment = request.POST["userComment"]
+            c = Comment(commentText=newComment,user=request.user,listing=l)
+            c.save()
+        else:
+            newBid = request.POST["newBid"]
+            if (b.currentBid < int(newBid)):
+                b.currentBid = int(newBid)
+                b.currentBidUser = request.user
+                b.save()
+            else:
+                return render(request, "auctions/listing.html", {"listing":l,"bid":b, "w":w, "error":'Your bid was too low, please try again'})
             
-    return render(request, "auctions/listing.html", {"listing":l,"bid":b, "w":w})
+    return render(request, "auctions/listing.html", {"listing":l,"bid":b, "w":w, "comments":c})
 
 
 def new(request):

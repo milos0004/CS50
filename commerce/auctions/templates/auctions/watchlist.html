@@ -6,8 +6,8 @@
     <li>
         <a href = "{% url 'listing' listing.listingID.id %}">{{listing.listingID}}</href>
             <br>{{listing.listingID.listingDescription}}
-            <br>currentBid here
-            <br>image here
+            <br>Curent Bid: £{{listing.bid.currentBid}}
+            <br><img src={{listing.listingID.imageURL}} width="50px">
             <br>
             <br>
     </li>

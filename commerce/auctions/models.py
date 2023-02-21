@@ -21,9 +21,6 @@ class Listing(models.Model):
     def __str__(self):
         return f"{self.listingTitle} - {self.listingCategory}"
     
-class WatchList(models.Model):
-    userID = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
-    listingID = models.ForeignKey(Listing, on_delete=models.CASCADE, default="1")
 
 
 class Bid(models.Model):
@@ -34,6 +31,12 @@ class Bid(models.Model):
     currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
     def __str__(self):
         return f"{self.bidListing.listingTitle} - £{self.currentBid}"
+    
+class WatchList(models.Model):
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
+    listingID = models.ForeignKey(Listing, on_delete=models.CASCADE, default="1")
+    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, default="1")
+
 
 class Comment(models.Model):
     commentText = models.CharField(max_length=512, null=True)

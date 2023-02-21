@@ -26,10 +26,11 @@ def watchlist(request):
     if request.method == "POST":
         thelistingid = request.POST["thelistingid"]
         listing = Listing.objects.get(pk=thelistingid)
+        
         try:
-            member = WatchList.objects.get(listingID=listing,userID=request.user)
-            if member:
-                member.delete()
+            usersWatchlist = WatchList.objects.get(listingID=listing,userID=request.user)
+            if usersWatchlist:
+                usersWatchlist.delete()
                 return render(request, "auctions/listing.html", {"listing":listing, "w":False})
         except:
            w = WatchList(listingID=listing,userID=request.user)
@@ -37,7 +38,6 @@ def watchlist(request):
            return render(request, "auctions/listing.html", {"listing":listing, "w":True})
     
     usersWatchlist = WatchList.objects.filter(userID=request.user)
- 
     return render(request, "auctions/watchlist.html", {"usersWatchlist":usersWatchlist})
 
 def listing(request,listing):

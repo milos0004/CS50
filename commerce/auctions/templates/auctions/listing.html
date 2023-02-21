@@ -57,7 +57,8 @@
         <input class="btn btn-primary" type="submit" value="Submit Comment">
     </form>
     <br>
-    {% if comments %}
+    {% if comments.class == list  %}
+
         {% for c in comments %}
            {{c.commentText}} - {{c.user}} at {{c.commentTime}}<br>
         {% endfor %}

@@ -50,10 +50,10 @@ def listing(request,listing):
     l = Listing.objects.get(pk=listing)
     c = Comment.objects.filter(listing=listing)
     if request.method == "POST":
-        if (request.POST["userComment"]):
-            newComment = request.POST["userComment"]
-            c = Comment(commentText=newComment,user=request.user,listing=l)
-            c.save()
+        isComment = request.POST.get('userComment',False)
+        if (isComment):
+            newComment = Comment(commentText=request.POST["userComment"],user=request.user,listing=l)
+            newComment.save()
         else:
             newBid = request.POST["newBid"]
             if (b.currentBid < int(newBid)):

@@ -2,9 +2,11 @@
 
 {% block body %}
     <h2>Categories</h2>
+    <br>
     {% for c in categories %}
         <li>
-            <a class="nav-link"  href = "{% url 'category' c %}">{{c}}</a>
+            <a style="font-size: 20px;" href = "{% url 'category' c %}">{{c}}</a>
+            <br><br>
         </li>
     {% endfor %}
 {% endblock %}

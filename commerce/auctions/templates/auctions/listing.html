@@ -6,63 +6,72 @@
     {% if listing.imageURL %}
         <img src={{listing.imageURL}}} width="300px"> <br>
     {% endif %}
-    Current Bid: £{{bid.currentBid}}
-    <br>
-    User with the current Bid: {{bid.currentBidUser}}
-    <br><br>
-    {% if user.is_authenticated %}
+    {% if listing.isActive %}
+        Current Bid: £{{bid.currentBid}}
+        <br>
+        User with the current Bid: {{bid.currentBidUser}}
+        <br><br>
+        {% if user.is_authenticated %}
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% if error %}
+                        <h6 style="color: red;">{{error}}</h6>
+                        <br>
+                    {% endif %}
+                    <input class="form-control" autofocus type="number" width="100px" name="newBid" placeholder="Enter Your Bid Here">
+                </div>
+                <input class="btn btn-primary" type="submit" value="Submit Bid">
+            </form>
+            <br>
+
+            <form method="post" action="{% url 'watchlist' %}" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="thelistingid" value={{listing.id}}>
+
+                {% if w %}
+                    <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                        Remove from Watchlist
+                    </button>
+                {% else %}
+                    <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                        Add Listing to Your Watchlist
+                    </button>
+                {% endif %}
+
+            </form>
+            {% if listing.creator == request.user %}
+                <br>
+                <a href = "{% url 'closeListing' listing.id %}" >End auction</a>  <br>
+                End auction
+
+            {% endif %}
+        {% else %}   
+        <h6>You will need to Sign In to be able to interact with this Listing. (For example: bidding, commenting and adding to your watchlist.)</h6> 
+
+        {% endif %}
+    {% else %}
+        <h1>The auction has ended. The winner is {{listing.listingBid.currentBidUser}}</h1>
+    {% endif %}
+
+    <h3>Comments</h3>
+    {% if listing.isActive %}
+        {% if user.is_authenticated %}
         <form action="{% url 'listing' listing.id %}" method="post">
             {% csrf_token %}
             <div class="form-group">
-                {% if error %}
-                    <h6 style="color: red;">{{error}}</h6>
-                    <br>
-                {% endif %}
-                <input class="form-control" autofocus type="number" width="100px" name="newBid" placeholder="Enter Your Bid Here">
+                <input class="form-control" autofocus type="text" width="100px" name="userComment" placeholder="Write Your Comment Here">
             </div>
-            <input class="btn btn-primary" type="submit" value="Submit Bid">
+            <input class="btn btn-primary" type="submit" value="Submit Comment">
         </form>
         <br>
-
-        <form method="post" action="{% url 'watchlist' %}" class="inline">
-            {% csrf_token %}
-            <input type="hidden" name="thelistingid" value={{listing.id}}>
-
-            {% if w %}
-                <button type="submit" name="submit_param" value="submit_value" class="link-button">
-                    Remove from Watchlist
-                </button>
-            {% else %}
-                <button type="submit" name="submit_param" value="submit_value" class="link-button">
-                    Add Listing to Your Watchlist
-                </button>
-            {% endif %}
-
-        </form>
-        {% if listing.creator == request.user %}
-            <br>
-            End auction
-
         {% endif %}
-    {% else %}   
-    <h6>Sign In to be able to bid on this Listing, and/or add it to your watchlist.</h6> 
 
     {% endif %}
-    <h3>Comments</h3>
-    <form action="{% url 'listing' listing.id %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" width="100px" name="userComment" placeholder="Write Your Comment Here">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Submit Comment">
-    </form>
-    <br>
-    {% if comments.class == list  %}
-
+    {% if comments %}
         {% for c in comments %}
            {{c.commentText}} - {{c.user}} at {{c.commentTime}}<br>
         {% endfor %}
-
     {% else %}
         No Comments on this Listing yet.
     {% endif %}

@@ -9,33 +9,36 @@ Categories = (
 class User(AbstractUser):
     pass
 
+class Bid(models.Model):
+    startBid = models.IntegerField(default="1")
+    #bidIncrement = models.IntegerField(default="1")
+    #bidListing = models.OneToOneField(Listing, on_delete=models.CASCADE, default="1")
+    currentBid = models.IntegerField()
+    currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
+    def __str__(self):
+        return f"- £{self.currentBid}"
+    
 
 class Listing(models.Model):
     listingTitle = models.CharField(max_length=64)
+    isActive = models.BooleanField(default=True)
     listingDescription = models.CharField(max_length=512)
-
+    listingBid = models.OneToOneField(Bid, on_delete=models.CASCADE, default="1")
     imageURL = models.URLField()
     listingCategory = models.CharField(max_length=10, choices=Categories)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default="1", related_name="created")
+    #winner = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='%(class)winner', null=True, blank=True)
     #watchlist = models.ManyToManyField(User, blank=True, related_name="watchlist")
     def __str__(self):
         return f"{self.listingTitle} - {self.listingCategory}"
     
 
 
-class Bid(models.Model):
-    startBid = models.IntegerField(default="1")
-    #bidIncrement = models.IntegerField(default="1")
-    bidListing = models.OneToOneField(Listing, on_delete=models.CASCADE, default="1")
-    currentBid = models.IntegerField()
-    currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
-    def __str__(self):
-        return f"{self.bidListing.listingTitle} - £{self.currentBid}"
-    
+
 class WatchList(models.Model):
     userID = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
     listingID = models.ForeignKey(Listing, on_delete=models.CASCADE, default="1")
-    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, default="1")
+    #bid = models.ForeignKey(Bid, on_delete=models.CASCADE, default="1")
 
 
 class Comment(models.Model):

@@ -12,6 +12,12 @@ def index(request):
     listings = Listing.objects.all()
     return render(request, "auctions/index.html", {"listings":listings})
 
+def closeListing(request,listing):
+    l= Listing.objects.get(pk=listing)
+    l.isActive = False
+    l.save()
+    return render(request, "auctions/listing.html", {"listing":l})
+
 def categories(request):
     Categ = ('home', 'technology', 'garden','appliances', 'toys','clothing','sports','health','other')
     listings = Listing.objects.all()
@@ -38,7 +44,10 @@ def watchlist(request):
            return render(request, "auctions/listing.html", {"listing":listing, "w":True})
     
     usersWatchlist = WatchList.objects.filter(userID=request.user)
-    return render(request, "auctions/watchlist.html", {"usersWatchlist":usersWatchlist})
+    listings=[]
+    for watchlist in usersWatchlist:
+        listings.append(watchlist.listingID)
+    return render(request, "auctions/watchlist.html", {"usersWatchlist":usersWatchlist,"listings":listings})
 
 def listing(request,listing):
     try:
@@ -46,7 +55,7 @@ def listing(request,listing):
         w=True
     except:
         w=False
-    b = Bid.objects.get(bidListing=listing)
+    b = Listing.objects.get(listingBid=listing).listingBid
     l = Listing.objects.get(pk=listing)
     c = Comment.objects.filter(listing=listing)
     if request.method == "POST":
@@ -74,11 +83,12 @@ def new(request):
         Category = request.POST["listingCategory"]
         creat = request.user
         bid = request.POST["startBid"]
-        
-        l = Listing(listingTitle=Title,listingDescription=Description,imageURL=image,listingCategory=Category,creator=creat)
-        l.save()
-        b=Bid(startBid=bid,bidListing=l,currentBid=bid,currentBidUser=creat)
+        b=Bid(startBid=bid,currentBid=bid,currentBidUser=creat)
         b.save()
+        l = Listing(listingTitle=Title,listingDescription=Description,listingBid=b,imageURL=image,listingCategory=Category,creator=creat)
+        l.save()
+        
+       
         return HttpResponseRedirect(reverse("index"))
     return render(request, "auctions/new.html")
     

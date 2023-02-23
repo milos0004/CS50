@@ -44,12 +44,11 @@ def watchlist(request):
             usersWatchlist = WatchList.objects.get(listingID=listing,userID=request.user)
             if usersWatchlist:
                 usersWatchlist.delete()
-                return render(request, "auctions/listing.html", {"listing":listing,"bid":b, "w":False, "comments":c})
+                return HttpResponseRedirect("/"+thelistingid)
         except:
            w = WatchList(listingID=listing,userID=request.user)
            w.save()   
-
-           return render(request, "auctions/listing.html", {"listing":listing,"bid":b, "w":True, "comments":c})
+           return HttpResponseRedirect("/"+thelistingid)
     
     usersWatchlist = WatchList.objects.filter(userID=request.user)
     listings=[]

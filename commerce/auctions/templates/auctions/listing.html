@@ -1,15 +1,41 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+
     <h2>{{listing.listingTitle}}</h2>
     <h6>{{listing.listingDescription}}</h6>
+    <form method="post" action="{% url 'watchlist' %}" class="inline" style="text-align: right;">
+        {% csrf_token %}
+        <input type="hidden" name="thelistingid" value={{listing.id}}>
+
+        {% if w %}
+            <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                Remove from Watchlist
+            </button>
+        {% else %}
+            <button type="submit" name="submit_param" value="submit_value" class="link-button">
+                Add Listing to Your Watchlist
+            </button>
+        {% endif %}
+    </form>
+
     {% if listing.imageURL %}
         <img src={{listing.imageURL}}} width="300px"> <br>
     {% endif %}
+    <br>
+    <h5>Details:</h4>
+        Listed By: {{listing.creator}} <br>
+        Category: {{listing.listingCategory}} <br>
+        <br>
     {% if listing.isActive %}
         Current Bid: £{{bid.currentBid}}
         <br>
-        User with the current Bid: {{bid.currentBidUser}}
+        {% if bid.currentBidUser == request.user %}
+            {{bid.currentBidUser}}: You have the current Bid!
+        {% else %}
+            User with the current Bid: {{bid.currentBidUser}}
+        {% endif %}
+        
         <br><br>
         {% if user.is_authenticated %}
             <form action="{% url 'listing' listing.id %}" method="post">
@@ -23,27 +49,11 @@
                 </div>
                 <input class="btn btn-primary" type="submit" value="Submit Bid">
             </form>
-            <br>
 
-            <form method="post" action="{% url 'watchlist' %}" class="inline">
-                {% csrf_token %}
-                <input type="hidden" name="thelistingid" value={{listing.id}}>
 
-                {% if w %}
-                    <button type="submit" name="submit_param" value="submit_value" class="link-button">
-                        Remove from Watchlist
-                    </button>
-                {% else %}
-                    <button type="submit" name="submit_param" value="submit_value" class="link-button">
-                        Add Listing to Your Watchlist
-                    </button>
-                {% endif %}
-            </form>
-            <br> <br>
             {% if listing.creator == request.user %}
                 <br>
                 <a href = "{% url 'closeListing' listing.id %}" >End auction</a>  <br>
-                End auction
 
             {% endif %}
         {% else %}   

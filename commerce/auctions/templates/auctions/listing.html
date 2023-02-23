@@ -38,8 +38,8 @@
                         Add Listing to Your Watchlist
                     </button>
                 {% endif %}
-
             </form>
+            <br> <br>
             {% if listing.creator == request.user %}
                 <br>
                 <a href = "{% url 'closeListing' listing.id %}" >End auction</a>  <br>

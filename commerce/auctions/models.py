@@ -14,7 +14,7 @@ class Bid(models.Model):
     #bidIncrement = models.IntegerField(default="1")
     #bidListing = models.OneToOneField(Listing, on_delete=models.CASCADE, default="1")
     currentBid = models.IntegerField()
-    currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default="1")
+    currentBidUser = models.ForeignKey(User, on_delete=models.CASCADE, default=None, blank=True, null=True)
     def __str__(self):
         return f"- £{self.currentBid}"
     
@@ -24,7 +24,7 @@ class Listing(models.Model):
     isActive = models.BooleanField(default=True)
     listingDescription = models.CharField(max_length=512)
     listingBid = models.OneToOneField(Bid, on_delete=models.CASCADE, default="1")
-    imageURL = models.URLField()
+    imageURL = models.URLField(default="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png", max_length=10000)
     listingCategory = models.CharField(max_length=10, choices=Categories)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default="1", related_name="created")
     #winner = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name='%(class)winner', null=True, blank=True)

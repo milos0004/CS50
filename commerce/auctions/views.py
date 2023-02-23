@@ -4,6 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+
 
 from .models import *
 
@@ -14,9 +16,10 @@ def index(request):
 
 def closeListing(request,listing):
     l= Listing.objects.get(pk=listing)
+    c = Comment.objects.filter(listing=listing)
     l.isActive = False
     l.save()
-    return render(request, "auctions/listing.html", {"listing":l})
+    return render(request, "auctions/listing.html", {"listing":l, "comments":c})
 
 def categories(request):
     Categ = ('home', 'technology', 'garden','appliances', 'toys','clothing','sports','health','other')
@@ -28,20 +31,25 @@ def category(request,category):
     listings = Listing.objects.filter(listingCategory=category)
     return render(request, "auctions/category.html", {"listings":listings, "category":category})
 
+@login_required()
 def watchlist(request):
     if request.method == "POST":
+
         thelistingid = request.POST["thelistingid"]
         listing = Listing.objects.get(pk=thelistingid)
+        b = Listing.objects.get(listingBid=thelistingid).listingBid
+        c = Comment.objects.filter(listing=thelistingid)
         
         try:
             usersWatchlist = WatchList.objects.get(listingID=listing,userID=request.user)
             if usersWatchlist:
                 usersWatchlist.delete()
-                return render(request, "auctions/listing.html", {"listing":listing, "w":False})
+                return render(request, "auctions/listing.html", {"listing":listing,"bid":b, "w":False, "comments":c})
         except:
            w = WatchList(listingID=listing,userID=request.user)
            w.save()   
-           return render(request, "auctions/listing.html", {"listing":listing, "w":True})
+
+           return render(request, "auctions/listing.html", {"listing":listing,"bid":b, "w":True, "comments":c})
     
     usersWatchlist = WatchList.objects.filter(userID=request.user)
     listings=[]
@@ -70,20 +78,24 @@ def listing(request,listing):
                 b.currentBidUser = request.user
                 b.save()
             else:
-                return render(request, "auctions/listing.html", {"listing":l,"bid":b, "w":w, "error":'Your bid was too low, please try again'})
+                return render(request, "auctions/listing.html", {"listing":l,"bid":b,"comments":c, "w":w, "error":'Your bid was too low, please try again'})
             
     return render(request, "auctions/listing.html", {"listing":l,"bid":b, "w":w, "comments":c})
 
-
+@login_required()
 def new(request):
     if request.method == "POST":
         Title = request.POST["listingTitle"]
         Description = request.POST["listingDescription"]
+       
         image = request.POST["imageURL"]
+        if image == "":
+            image = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
+
         Category = request.POST["listingCategory"]
         creat = request.user
         bid = request.POST["startBid"]
-        b=Bid(startBid=bid,currentBid=bid,currentBidUser=creat)
+        b=Bid(startBid=bid,currentBid=bid,currentBidUser=None)
         b.save()
         l = Listing(listingTitle=Title,listingDescription=Description,listingBid=b,imageURL=image,listingCategory=Category,creator=creat)
         l.save()

@@ -1,0 +1,32 @@
+
+    
+{% for email in emails %}
+{% if email.isActive %}
+    <div class="container" style="border-style: solid;border-color: #d3d3d3; background-color: #e9e9e9; border-width: thin; border-radius:5px;">
+        <div class="row">
+            <div class="col-3">
+                {% if email.imageURL %}
+                    <img src={{email.imageURL}} width="200px" style="border-radius:5px;">
+                {% endif %}
+                
+            </div>
+            <div class="col-7">
+                <br>
+                <a href = "{% url 'email' email.id %}">{{email.emailTitle}}</a>  <br> 
+                {{email.emailDescription}} <br>
+            </div>
+            <div class="col-2">
+                <br>
+                Opening Bid: £{{email.emailBid.startBid}} <br>
+                Current Bid: £{{email.emailBid.currentBid}} <br>
+                <br><br><br><br>
+                Listed by: {{email.creator}}
+                    
+            </div>
+        </div>   
+    </div>
+    <br>
+    <br>
+{% endif %}    
+
+{% endfor %}

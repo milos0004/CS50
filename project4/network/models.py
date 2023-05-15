@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+
 from django.db import models
 
 
@@ -10,12 +10,13 @@ class Post(models.Model):
     content = models.CharField(max_length=512)
     datetime = models.DateTimeField()
 
-    pass
 
 class Likes(models.Model):
-    pass
-
-class Followers(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    followers = models.ForeignKey(User,on_delete=models.CASCADE)
-    pass
+    post = models.ForeignKey(Post,on_delete=models.CASCADE)
+    liked_at = models.DateTimeField()
+  
+class Followers(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name='users_followers')
+    followers = models.ForeignKey(User,on_delete=models.CASCADE, related_name="user_following")
+    follow_time = models.DateTimeField()

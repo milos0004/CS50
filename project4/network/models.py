@@ -13,12 +13,12 @@ class Post(models.Model):
     datetime = models.DateTimeField(default=datetime.now())
 
 
-class Likes(models.Model):
+class Like(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     liked_at = models.DateTimeField(default=datetime.now())
   
-class Followers(models.Model):
+class Follower(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, related_name='users_followers')
     followers = models.ForeignKey(User,on_delete=models.CASCADE, related_name="user_following")
     follow_time = models.DateTimeField(default=datetime.now())

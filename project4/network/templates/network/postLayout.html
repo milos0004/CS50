@@ -1,0 +1,36 @@
+{% for post in posts %}
+
+    <div class="container" id="post">
+        <div class="row" >
+            {{post.creator.username}}
+        </div>
+        <div class="row" >
+            <a href="">Edit</a>
+        </div>
+        <div class="row" >
+            {{post.content}}
+        </div>
+        <div class="row" >
+            {{post.datetime}}
+        </div>
+        <div class="row" >
+            Likes
+        </div>
+        <div class="row" >
+            Comment
+        </div>
+       
+
+        
+
+        
+        
+    </div>
+    
+
+ 
+    <br>
+    <br>
+
+    
+{% endfor %}

@@ -4,11 +4,26 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import *
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Post.objects.all()
+    return render(request, "network/index.html", {"posts":posts})
+
+def profile(request):
+    posts = Post.objects.filter(creator=request.user)
+    try:
+        
+        followers = Follower.objects.filter(user=request.user)
+    except:
+        followers = []
+    try:
+        following = Follower.objects.filter(followers=request.user)
+    except:
+        following = []
+    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts})
+
 
 
 def login_view(request):

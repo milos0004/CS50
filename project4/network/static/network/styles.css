@@ -1,0 +1,11 @@
+#post {
+    border-style: solid !important;
+    border-color: #d3d3d3 !important;
+    background-color: white !important; 
+    border-width: thin !important; 
+    border-radius:5px !important;
+    padding:10px;
+    margin:10px;
+    padding-left: 40px;
+}
+

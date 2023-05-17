@@ -31,5 +31,5 @@ class PostTestCase(TestCase):
         u1 = User.objects.get(username="milos")
         u2 = User.objects.get(username="andy")
         u1f = Follower.objects.get(user=u1)
-        self.assertEquals(u1f.followers, u2)
+        self.assertEquals(u1f.follows, u2)
         self.assertEquals(u1f.user, u1)

@@ -5,20 +5,28 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import *
+from datetime import datetime
 
 
 def index(request):
-    posts = Post.objects.all()
-    return render(request, "network/index.html", {"posts":posts})
+    if request.method == "POST":
+        newpost = Post.objects.create(creator=request.user,content=request.POST["post"], datetime= datetime.now())
+        newpost.save()
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        posts = Post.objects.all()
+        return render(request, "network/index.html", {"posts":posts})
 
 def profile(request):
     posts = Post.objects.filter(creator=request.user)
+    #filter out all posts created by user logged in
     try:  
-        followers = Follower.objects.filter(user=request.user)
+        followers = Follower.objects.filter(follows=request.user)
+        #
     except:
         followers = []
     try:
-        following = Follower.objects.filter(followers=request.user)
+        following = Follower.objects.filter(user=request.user)
     except:
         following = []
     return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts})
@@ -27,8 +35,8 @@ def following(request):
     posts=[]
     following = Follower.objects.filter(user=request.user)
     for f in following:
-        posts+= Post.objects.filter(creator=f.user)
-    return render(request, "network/following.html",{"posts":posts})
+        posts+= Post.objects.filter(creator=f.follows)
+    return render(request, "network/following.html",{"posts":posts,"following":following})
 
 
 

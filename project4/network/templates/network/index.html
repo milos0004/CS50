@@ -4,19 +4,19 @@
     <h1>All Posts</h1>
     <div id = "post">
         
-        <form id="compose-form">
-            
+        <form method="post" >
+            {% csrf_token %}
             <div class="form-row">
                 <h5>Create New Post</h5>
             </div>
             <div class="form-row">
-                <textarea type="text" cols="100" rows="5" placeholder="Type Your Post Here"></textarea>
+                <textarea name="post"type="text" cols="100" rows="5" placeholder="Type Your Post Here"></textarea>
             </div>
+            
             <div class="form-row">    
                 <input type="submit" class="btn btn-primary" Post>
             </div>
-            
-        </form>
+          </form>
     </div>
     
     {% include "network/postLayout.html" %}

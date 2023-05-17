@@ -8,10 +8,20 @@
         {{request.user.email}}
     </div>
     <div class="row" >
-        You Have: {{followers|length}} Followers
+        You Have {{followers|length}} Followers: 
+        <br>
+        {% for f in followers %}
+            - {{f.user}}
+            <br>
+        {% endfor %}
     </div>
     <div class="row" >
-        You are Following {{following|length}} Other Users.
+        You are Following {{following|length}} Other Users: 
+        <br>
+        {% for f in following %}
+            - {{f.follows}}
+            <br>
+        {% endfor %}
     </div>
     
 </div>

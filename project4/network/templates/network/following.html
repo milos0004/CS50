@@ -2,7 +2,13 @@
 
 {% block body %}
 
-Hi
+Hi, you are currently following {{following|length}} other users: 
+<br>
+{% for f in following %}
+     - {{f.follows}}
+     <br>
+{% endfor %}
+<h1>All posts from those users: </h1>
 
 {% include "network/postLayout.html" %}
 {% endblock %}

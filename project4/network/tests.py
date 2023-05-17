@@ -1,6 +1,6 @@
 
 from django.test import TestCase
-from .models import User, Like, Post, Follower
+from .models import *
 # Create your tests here.
 class PostTestCase(TestCase):
     def setUp(self):

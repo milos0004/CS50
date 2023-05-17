@@ -13,8 +13,7 @@ def index(request):
 
 def profile(request):
     posts = Post.objects.filter(creator=request.user)
-    try:
-        
+    try:  
         followers = Follower.objects.filter(user=request.user)
     except:
         followers = []
@@ -23,6 +22,13 @@ def profile(request):
     except:
         following = []
     return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts})
+
+def following(request):
+    posts=[]
+    following = Follower.objects.filter(user=request.user)
+    for f in following:
+        posts+= Post.objects.filter(creator=f.user)
+    return render(request, "network/following.html",{"posts":posts})
 
 
 

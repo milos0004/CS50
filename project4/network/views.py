@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .models import *
 from datetime import datetime
@@ -15,8 +16,10 @@ def index(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         posts = Post.objects.all()
-        return render(request, "network/index.html", {"posts":posts})
+        posts = posts[::-1]
+        p = Paginator(posts,5)
 
+        return render(request, "network/index.html", {"posts":posts,"p":p,"pageno":1})
 def profile(request):
     posts = Post.objects.filter(creator=request.user)
     #filter out all posts created by user logged in
@@ -38,7 +41,9 @@ def following(request):
         posts+= Post.objects.filter(creator=f.follows)
     return render(request, "network/following.html",{"posts":posts,"following":following})
 
-
+def page(request):
+    page = request.GET.get('page')
+    return render(request, "network/index.html", {"posts":posts,"p":p,"pageno":page})
 
 def login_view(request):
     if request.method == "POST":

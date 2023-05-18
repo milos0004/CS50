@@ -15,21 +15,34 @@ def index(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         posts = Post.objects.all()
-        return render(request, "network/index.html", {"posts":posts})
+        likes = []
+        for p in posts:
+            likes += Like.objects.filter(post=p)
 
-def profile(request):
-    posts = Post.objects.filter(creator=request.user)
+        return render(request, "network/index.html", {"posts":posts, "likes":likes})
+
+
+def profile(request, user):
+    u = User.objects.get(username=user)
+    posts = Post.objects.filter(creator=u)
     #filter out all posts created by user logged in
     try:  
-        followers = Follower.objects.filter(follows=request.user)
+        followers = Follower.objects.filter(follows=u)
         #
     except:
         followers = []
     try:
-        following = Follower.objects.filter(user=request.user)
+        following = Follower.objects.filter(user=u)
     except:
         following = []
-    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts})
+    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u})
+
+def following(request):
+    posts=[]
+    following = Follower.objects.filter(user=request.user)
+    for f in following:
+        posts+= Post.objects.filter(creator=f.follows)
+    return render(request, "network/following.html",{"posts":posts,"following":following})
 
 def following(request):
     posts=[]

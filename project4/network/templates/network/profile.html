@@ -1,11 +1,16 @@
 {% extends "network/layout.html" %}
 {% block body %}
 <div class="container" id="post">
+    {% if user == request.user %}
+
+    {% else %}
+        Follow
+    {% endif %}
     <div class="row" >
-        {{request.user.username}}
+        {{user.username}}
     </div>
     <div class="row" >
-        {{request.user.email}}
+        {{user.email}}
     </div>
     <div class="row" >
         You Have {{followers|length}} Followers: 

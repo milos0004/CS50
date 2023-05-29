@@ -16,18 +16,12 @@
         <div class="row" >
             <a href="">Edit</a>
         </div>
+        {% else %}
+        <a href="">Like Post</a>
         {% endif %}
-        <div class="row" >
-            {% for like in likes %}
-                {% if forloop.counter == forloop.parentloop.counter %}
-                    {{ like }}
-                {% endif %}
-                
-            {% endfor %}
-            Likes 
-        </div>
-        <div class="row" >
-            Comment
+
+     
+     
         </div>
        
 
@@ -37,8 +31,25 @@
         
     </div>
     
+    <div class="container" id ="postfooter">
+            
+        {% for like in likes %}
+            {% if forloop.counter == forloop.parentloop.counter %}
+            <div class="likecontainer">
+                <span>{{ like }}</span>
+                
+                <img src="https://i.ibb.co/k90YGq6/download-removebg-preview.png" data-likecount={{like}} class="likeimg" width="15px" alt="https://i.ibb.co/x8c9xC1/download-removebg-preview-1.png">
+            </div>
+          
+            {% endif %}
+            
+        {% endfor %}
+        
+        
+    
+        Comment
 
- 
+    </div>
     <br>
     <br>
 

@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -26,6 +26,18 @@ def index(request):
         return render(request, "network/index.html", {"posts":posts, "likes":likes})
 
 
+def like(request,post):
+    print(post)
+    print(int(post))
+    thepost= Post.objects.get(id=post)
+    if request.method == "POST":
+        newlike = Like.objects.create(user=request.user, post=thepost,liked_at=datetime.now())
+        newlike.save()
+        return HttpResponse(status=204)
+    else:
+        return JsonResponse({
+            "error": "POST request required."
+        }, status=400)
 
 def follow(request, user):
     u = User.objects.get(username=user)

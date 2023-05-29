@@ -1,20 +1,29 @@
 {% for post in posts %}
     
-
+    
     <div class="container" id="post">
         <div class="row" >
             <a href="{% url 'profile' post.creator.username %}">{{post.creator.username}}</a>
         </div>
-        <div class="row" >
-            <a href="">Edit</a>
-        </div>
+ 
         <div class="row" >
             {{post.content}}
         </div>
         <div class="row" >
             {{post.datetime}}
         </div>
+        {% if post.creator == request.user %}
         <div class="row" >
+            <a href="">Edit</a>
+        </div>
+        {% endif %}
+        <div class="row" >
+            {% for like in likes %}
+                {% if forloop.counter == forloop.parentloop.counter %}
+                    {{ like }}
+                {% endif %}
+                
+            {% endfor %}
             Likes 
         </div>
         <div class="row" >

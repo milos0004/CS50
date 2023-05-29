@@ -4,7 +4,12 @@
     {% if user == request.user %}
 
     {% else %}
-        Follow
+        <form method="post" >
+            {% csrf_token %}
+            <div class="form-row">    
+                <button id="following" type="submit" class="btn btn-link"> Follow User </button>
+            </div>
+        </form>
     {% endif %}
     <div class="row" >
         {{user.username}}

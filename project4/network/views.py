@@ -7,6 +7,13 @@ from django.urls import reverse
 from .models import *
 from datetime import datetime
 
+def calculatelikes(posts):
+    likes = []
+    for p in posts:
+        thelikes = Like.objects.filter(post=p).count()
+        print(thelikes)
+        likes.append(thelikes)
+    return likes
 
 def index(request):
     if request.method == "POST":
@@ -15,14 +22,21 @@ def index(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         posts = Post.objects.all()
-        likes = []
-        for p in posts:
-            likes += Like.objects.filter(post=p)
-
+        likes = calculatelikes(posts)
         return render(request, "network/index.html", {"posts":posts, "likes":likes})
 
 
+
+def follow(request, user):
+    u = User.objects.get(username=user)
+
+    f = Follower.objects.create(user=request.user, follows=u,follow_time=datetime.now)
+    f.save()
+
+
+
 def profile(request, user):
+    
     u = User.objects.get(username=user)
     posts = Post.objects.filter(creator=u)
     #filter out all posts created by user logged in
@@ -35,21 +49,19 @@ def profile(request, user):
         following = Follower.objects.filter(user=u)
     except:
         following = []
-    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u})
+
+    likes = calculatelikes(posts)
+    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u,"likes":likes})
 
 def following(request):
     posts=[]
     following = Follower.objects.filter(user=request.user)
     for f in following:
         posts+= Post.objects.filter(creator=f.follows)
-    return render(request, "network/following.html",{"posts":posts,"following":following})
 
-def following(request):
-    posts=[]
-    following = Follower.objects.filter(user=request.user)
-    for f in following:
-        posts+= Post.objects.filter(creator=f.follows)
-    return render(request, "network/following.html",{"posts":posts,"following":following})
+    likes = calculatelikes(posts)
+    return render(request, "network/following.html",{"posts":posts,"following":following,"likes":likes})
+
 
 
 

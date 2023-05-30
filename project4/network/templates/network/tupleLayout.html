@@ -4,18 +4,17 @@
             <a href="{% url 'profile' tuple.0.creator.username %}">{{tuple.0.creator.username}}</a>
         </div>
  
-        <div class="row" >
+        <div class="row" id="content" >
             {{tuple.0.content}}
+            
         </div>
         <div class="row" >
             {{tuple.0.datetime}}
         </div>
         {% if tuple.0.creator == request.user %}
         <div class="row" >
-            <a href="">Edit</a>
+            <a class="edit" data-postid={{tuple.0.id}}>Edit</a>
         </div>
-        {% else %}
-        <a href="">Like Post</a>
         {% endif %}
         <div class="likecontainer">
             <span>{{ tuple.1 }}</span>
@@ -23,22 +22,7 @@
             <img src={{tuple.2}} data-likecount={{tuple.1}} data-postid={{tuple.0.id}} class="likeimg" width="15px">
         </div>
     </div>
-   {% comment %}
-     <div class="container" id ="postfooter">
-             
-         {% for like in likes %}
-             {% if forloop.counter == forloop.parentloop.counter %}
-             <div class="likecontainer">
-                 <span>{{ like }}</span>
-                 
-                 <img src="https://i.ibb.co/k90YGq6/download-removebg-preview.png" data-likecount={{like}} data-postid={{post.id}} class="likeimg" width="15px" alt="https://i.ibb.co/x8c9xC1/download-removebg-preview-1.png">
-             </div>
-             {% endif %}
-         {% endfor %}
-         Comment
- 
-     </div>
+
      <br>
      <br>
-   {% endcomment %}
 {% endfor %}

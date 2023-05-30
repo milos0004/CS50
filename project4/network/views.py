@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-
+import json
 from .models import *
 from datetime import datetime
 
@@ -74,6 +74,15 @@ def like(request,post):
         return JsonResponse({
             "error": "POST request required."
         }, status=400)
+
+
+
+def edit(request,post):
+
+    if request.method == "POST":
+        data = json.loads(request.body)
+        content = data.get("content")
+        print(content)
 
 def follow(request, user):
     u = User.objects.get(username=user)

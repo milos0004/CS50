@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 })
 function follow(){
-    if(document.querySelector('#following').innerHTML == 'Following')
+    if(document.querySelector('#following').innerHTML == 'Unfollow')
     {
         document.querySelector('#following').innerHTML = 'Follow User'
         // fetch('/follow/' + user)

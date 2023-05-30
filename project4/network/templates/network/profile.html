@@ -7,7 +7,8 @@
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">    
-                <button id="following" type="submit" class="btn btn-link"> Follow User </button>
+                
+                <button id="following" type="submit" class="btn btn-link"> {{text}} </button>
             </div>
         </form>
     {% endif %}
@@ -36,5 +37,5 @@
     
 </div>
 
-{% include "network/postLayout.html" %}
+{% include "network/tupleLayout.html" %}
 {% endblock %}

@@ -7,13 +7,44 @@ from django.urls import reverse
 from .models import *
 from datetime import datetime
 
-def calculatelikes(posts):
+def calculatelikes(request, posts):
     likes = []
+    hasUserLiked = []
+    tupleList = []
     for p in posts:
         thelikes = Like.objects.filter(post=p).count()
+        li = Like.objects.filter(post=p)
+        for l in li:
+            if request.user == l.user:
+                hasUserLiked.append("https://i.ibb.co/x8c9xC1/download-removebg-preview-1.png")
+            else:
+                hasUserLiked.append("https://i.ibb.co/k90YGq6/download-removebg-preview.png")
+
+        theTuple = (p,thelikes,hasUserLiked)        
         print(thelikes)
         likes.append(thelikes)
+        tupleList.append(theTuple)
     return likes
+
+def createTupleList(request, posts):
+    likes = []
+    
+    tupleList = []
+
+    for p in posts:
+        thelikes = Like.objects.filter(post=p).count()
+        li = Like.objects.filter(post=p)
+        hasUserLiked="https://i.ibb.co/k90YGq6/download-removebg-preview.png"
+        for l in li:
+            if request.user == l.user:
+                hasUserLiked="https://i.ibb.co/x8c9xC1/download-removebg-preview-1.png"
+            
+
+        theTuple = (p,thelikes,hasUserLiked)        
+        print(thelikes)
+        likes.append(thelikes)
+        tupleList.append(theTuple)
+    return tupleList
 
 def index(request):
     if request.method == "POST":
@@ -22,8 +53,9 @@ def index(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         posts = Post.objects.all()
-        likes = calculatelikes(posts)
-        return render(request, "network/index.html", {"posts":posts, "likes":likes})
+        likes = calculatelikes(request, posts)
+        tupleList = createTupleList(request, posts)
+        return render(request, "network/index.html", {"posts":posts, "likes":likes,"tuples":tupleList})
 
 
 def like(request,post):
@@ -33,6 +65,10 @@ def like(request,post):
     if request.method == "POST":
         newlike = Like.objects.create(user=request.user, post=thepost,liked_at=datetime.now())
         newlike.save()
+        return HttpResponse(status=204)
+    elif request.method == "DELETE":
+        like = Like.objects.get(user=request.user,post=thepost)
+        like.delete()
         return HttpResponse(status=204)
     else:
         return JsonResponse({
@@ -62,8 +98,15 @@ def profile(request, user):
     except:
         following = []
 
-    likes = calculatelikes(posts)
-    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u,"likes":likes})
+    likes = calculatelikes(request,posts)
+    text = "Follow User"
+    for f in followers:
+        if f.user == request.user:
+            text="Unfollow"
+
+    tupleList = createTupleList(request, posts)
+
+    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u,"likes":likes,"text":text,"tuples":tupleList})
 
 def following(request):
     posts=[]

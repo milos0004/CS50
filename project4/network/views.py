@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 import json
 from .models import *
+from django.core.paginator import Paginator
 from datetime import datetime
 
 def calculatelikes(request, posts):
@@ -27,6 +28,8 @@ def calculatelikes(request, posts):
     return likes
 
 def createTupleList(request, posts):
+
+
     likes = []
     
     tupleList = []
@@ -46,6 +49,27 @@ def createTupleList(request, posts):
         tupleList.append(theTuple)
     return tupleList
 
+    
+    likes = []
+    
+    tupleList = []
+
+    for p in posts:
+        thelikes = Like.objects.filter(post=p).count()
+        li = Like.objects.filter(post=p)
+        hasUserLiked="https://i.ibb.co/k90YGq6/download-removebg-preview.png"
+        for l in li:
+            if request.user == l.user:
+                hasUserLiked="https://i.ibb.co/x8c9xC1/download-removebg-preview-1.png"
+            
+
+        theTuple = (p,thelikes,hasUserLiked)        
+        print(thelikes)
+        likes.append(thelikes)
+        tupleList.append(theTuple)
+    return tupleList
+
+
 def index(request):
     if request.method == "POST":
         newpost = Post.objects.create(creator=request.user,content=request.POST["post"], datetime= datetime.now())
@@ -53,9 +77,38 @@ def index(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         posts = Post.objects.all()
+        print(posts)
+        paginatedPosts = Paginator(posts,2)
+        print(paginatedPosts)
         likes = calculatelikes(request, posts)
         tupleList = createTupleList(request, posts)
-        return render(request, "network/index.html", {"posts":posts, "likes":likes,"tuples":tupleList})
+        return render(request, "network/index.html", {"posts":posts, "likes":likes,"tuples":tupleList,"paginator":paginatedPosts})
+
+def index(request, optional_param=None):
+    if request.method == "POST":
+        newpost = Post.objects.create(creator=request.user,content=request.POST["post"], datetime= datetime.now())
+        newpost.save()
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        if optional_param:
+            pageNo=optional_param
+        else:
+            pageNo=1
+        
+        posts = Post.objects.all()
+        print(posts)
+        paginatedPosts = Paginator(posts,2)
+        currentPage=paginatedPosts.page(pageNo)
+        currentPagePosts=currentPage.object_list
+        print(paginatedPosts )
+        print("YOU ARE HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(currentPage)
+        print(currentPagePosts)
+        print(posts)
+        likes = calculatelikes(request, posts)
+        tupleList = createTupleList(request, currentPagePosts)
+        return render(request, "network/index.html", {"posts":posts, "likes":likes,"tuples":tupleList,"paginator":paginatedPosts})
+
 
 
 def like(request,post):

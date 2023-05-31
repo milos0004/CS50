@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#following').onclick = follow;
 
 })
-function follow(){
+function follow(event){
     if(document.querySelector('#following').innerHTML == 'Unfollow')
     {
         document.querySelector('#following').innerHTML = 'Follow User'

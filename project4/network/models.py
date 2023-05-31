@@ -19,6 +19,6 @@ class Like(models.Model):
     liked_at = models.DateTimeField(default=datetime.now())
   
 class Follower(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE, related_name='user_follows')
+    user =  models.ForeignKey(User,on_delete=models.CASCADE, related_name='user_follows')
     follows = models.ForeignKey(User,on_delete=models.CASCADE, related_name="user_followed_by")
     follow_time = models.DateTimeField(default=datetime.now())

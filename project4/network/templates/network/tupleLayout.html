@@ -36,8 +36,10 @@
       {% for page_number in paginator.page_range %}
         {% if page1 == 'index' %}
             <li class="page-item"><a class="page-link" href="{% url 'index' page_number %}">{{page_number}}</a></li>
+        {% elif page1 == 'profile' %}
+        <li class="page-item"><a class="page-link" href="{% url 'profile' user page_number %}">{{page_number}}</a></li>
         {% else %}
-        <li class="page-item"><a class="page-link" href="{% url 'profile' user page_number %}">{{page_number}}</a></li
+        <li class="page-item"><a class="page-link" href="{% url 'following' page_number %}">{{page_number}}</a></li>
         {% endif %}
         
       {% endfor %}

@@ -72,7 +72,8 @@ def createTupleList(request, posts):
 
 def index(request, optional_param=None):
     if request.method == "POST":
-        newpost = Post.objects.create(creator=request.user,content=request.POST["post"], datetime= datetime.now())
+        newpost = Post.objects.create(creator=request.user,content=request.POST["post"],
+                                       datetime= datetime.now())
         newpost.save()
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -152,14 +153,24 @@ def profile(request, user, optional_param=None):
                                                    "posts":posts,"user":u,"text":text,"tuples":tupleList,
                                                    "paginator":paginatedPosts,"page1":'profile'})
 
-def following(request):
+def following(request, optional_param=None):
+    if optional_param:
+        pageNo=optional_param
+    else:
+        pageNo=1
+
+
     posts=[]
     following = Follower.objects.filter(user=request.user)
     for f in following:
         posts+= Post.objects.filter(creator=f.follows)
 
-    likes = calculatelikes(posts)
-    return render(request, "network/following.html",{"posts":posts,"following":following,"likes":likes})
+    paginatedPosts = Paginator(posts,2)
+    currentPage=paginatedPosts.page(pageNo)
+    currentPagePosts=currentPage.object_list
+    tupleList = createTupleList(request, currentPagePosts)
+    return render(request, "network/following.html",{"posts":posts,"following":following,"tuples":tupleList,
+                                                   "paginator":paginatedPosts,"page1":'following'})
 
 
 

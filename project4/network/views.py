@@ -70,20 +70,6 @@ def createTupleList(request, posts):
     return tupleList
 
 
-def index(request):
-    if request.method == "POST":
-        newpost = Post.objects.create(creator=request.user,content=request.POST["post"], datetime= datetime.now())
-        newpost.save()
-        return HttpResponseRedirect(reverse("index"))
-    else:
-        posts = Post.objects.all()
-        print(posts)
-        paginatedPosts = Paginator(posts,2)
-        print(paginatedPosts)
-        likes = calculatelikes(request, posts)
-        tupleList = createTupleList(request, posts)
-        return render(request, "network/index.html", {"posts":posts, "likes":likes,"tuples":tupleList,"paginator":paginatedPosts})
-
 def index(request, optional_param=None):
     if request.method == "POST":
         newpost = Post.objects.create(creator=request.user,content=request.POST["post"], datetime= datetime.now())
@@ -94,22 +80,13 @@ def index(request, optional_param=None):
             pageNo=optional_param
         else:
             pageNo=1
-        
         posts = Post.objects.all()
-        print(posts)
-        paginatedPosts = Paginator(posts,2)
+        paginatedPosts = Paginator(posts,5)
         currentPage=paginatedPosts.page(pageNo)
         currentPagePosts=currentPage.object_list
-        print(paginatedPosts )
-        print("YOU ARE HERE AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        print(currentPage)
-        print(currentPagePosts)
-        print(posts)
-        likes = calculatelikes(request, posts)
         tupleList = createTupleList(request, currentPagePosts)
-        return render(request, "network/index.html", {"posts":posts, "likes":likes,"tuples":tupleList,"paginator":paginatedPosts})
-
-
+        return render(request, "network/index.html", {"posts":posts,"tuples":tupleList,
+                                                      "paginator":paginatedPosts, "page1":'index'})
 
 def like(request,post):
     print(post)
@@ -127,9 +104,6 @@ def like(request,post):
         return JsonResponse({
             "error": "POST request required."
         }, status=400)
-
-
-
 def edit(request,post):
     p = Post.objects.get(id=post)
     if request.method == "PUT":
@@ -138,16 +112,16 @@ def edit(request,post):
         p.content=content
         p.save()
         return HttpResponse(status=204)
-
 def follow(request, user):
     u = User.objects.get(username=user)
 
     f = Follower.objects.create(user=request.user, follows=u,follow_time=datetime.now)
     f.save()
-
-
-
-def profile(request, user):
+def profile(request, user, optional_param=None):
+    if optional_param:
+        pageNo=optional_param
+    else:
+        pageNo=1
     
     u = User.objects.get(username=user)
     posts = Post.objects.filter(creator=u)
@@ -168,8 +142,15 @@ def profile(request, user):
         if f.user == request.user:
             text="Unfollow"
 
-    tupleList = createTupleList(request, posts)
-    return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u,"likes":likes,"text":text,"tuples":tupleList})
+    
+    paginatedPosts = Paginator(posts,2)
+    currentPage=paginatedPosts.page(pageNo)
+    currentPagePosts=currentPage.object_list
+    tupleList = createTupleList(request, currentPagePosts)
+
+    return render(request, "network/profile.html",{"followers":followers,"following":following,
+                                                   "posts":posts,"user":u,"text":text,"tuples":tupleList,
+                                                   "paginator":paginatedPosts,"page1":'profile'})
 
 def following(request):
     posts=[]

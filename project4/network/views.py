@@ -78,11 +78,13 @@ def like(request,post):
 
 
 def edit(request,post):
-
-    if request.method == "POST":
+    p = Post.objects.get(id=post)
+    if request.method == "PUT":
         data = json.loads(request.body)
         content = data.get("content")
-        print(content)
+        p.content=content
+        p.save()
+        return HttpResponse(status=204)
 
 def follow(request, user):
     u = User.objects.get(username=user)
@@ -114,7 +116,6 @@ def profile(request, user):
             text="Unfollow"
 
     tupleList = createTupleList(request, posts)
-
     return render(request, "network/profile.html",{"followers":followers,"following":following,"posts":posts,"user":u,"likes":likes,"text":text,"tuples":tupleList})
 
 def following(request):

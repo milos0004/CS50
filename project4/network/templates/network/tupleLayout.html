@@ -1,3 +1,4 @@
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 {% for tuple in tuples %}
     <div class="container" id="post">
         <div class="row" >
@@ -13,7 +14,7 @@
         </div>
         {% if tuple.0.creator == request.user %}
         <div class="row" >
-            <a class="edit" data-postid={{tuple.0.id}}>Edit</a>
+            <a class="edit" data-postid={{tuple.0.id}} data-view={{htmlview}}>Edit</a>
         </div>
         {% endif %}
         <div class="likecontainer">

@@ -44,6 +44,7 @@ function like(event){
     }
     else
     {
+        
         var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         fetch('/like/'+imageElement.dataset.postid, {
             method: 'DELETE',
@@ -75,23 +76,28 @@ function like(event){
 function edit(event){
     var editElement = event.target;
     editElement.parentNode.parentNode.querySelector('#content').style.display = 'none';
+    editElement.style.display = 'none';
 
     var newdiv = document.createElement('div');
     var newtxt = document.createElement('textarea');
     var newbtn = document.createElement('button');
     newbtn.innerHTML="Save";
-    newtxt.innerHTML = editElement.parentNode.parentNode.querySelector('#content').innerHTML;
-    editElement.appendChild(newdiv);
+    newtxt.innerHTML = editElement.parentNode.parentNode.querySelector('#content').innerHTML.trim();
+    editElement.parentNode.appendChild(newdiv);
     newdiv.appendChild(newtxt);
     newdiv.appendChild(newbtn);
     newbtn.onclick = function() {
+        console.log(editElement.dataset.view )
+        console.log("editElement.dataset.view ")
         editElement.parentNode.parentNode.querySelector('#content').style.display = 'block';
-        editElement.parentNode.parentNode.querySelector('#content').innerHTML = newtxt.value;
+        editElement.parentNode.parentNode.querySelector('#content').innerHTML = newtxt.value.trim();
         newdiv.style.display = 'none';
+        editElement.style.display = 'block';
 
 
-
-        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+       
+  
         fetch('/edit/'+editElement.dataset.postid , {
             method: 'PUT',
             headers: {'Content-Type': 'application/json','X-CSRFToken': csrftoken},

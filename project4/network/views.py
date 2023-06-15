@@ -82,42 +82,50 @@ def index(request, optional_param=None):
         else:
             pageNo=1
         posts = Post.objects.all()
-        paginatedPosts = Paginator(posts,5)
+        paginatedPosts = Paginator(posts,10)
         currentPage=paginatedPosts.page(pageNo)
         currentPagePosts=currentPage.object_list
         tupleList = createTupleList(request, currentPagePosts)
         return render(request, "network/index.html", {"posts":posts,"tuples":tupleList,
-                                                      "paginator":paginatedPosts, "page1":'index'})
+                                                      "paginator":paginatedPosts, "page1":'index',"currentPage":currentPage})
 
 def like(request,post):
-    print(post)
-    print(int(post))
-    thepost= Post.objects.get(id=post)
-    if request.method == "POST":
-        newlike = Like.objects.create(user=request.user, post=thepost,liked_at=datetime.now())
-        newlike.save()
-        return HttpResponse(status=204)
-    elif request.method == "DELETE":
-        like = Like.objects.get(user=request.user,post=thepost)
-        like.delete()
-        return HttpResponse(status=204)
+    if request.user.is_authenticated:
+
+        thepost= Post.objects.get(id=post)
+        if request.method == "POST":
+            newlike = Like.objects.create(user=request.user, post=thepost,liked_at=datetime.now())
+            newlike.save()
+            return HttpResponse(status=204)
+        elif request.method == "DELETE":
+            like = Like.objects.get(user=request.user,post=thepost)
+            like.delete()
+            return HttpResponse(status=204)
+        else:
+            return JsonResponse({
+                "error": "POST request required."
+            }, status=400)
     else:
-        return JsonResponse({
-            "error": "POST request required."
-        }, status=400)
+        return render(request, "network/login.html")
+        
 def edit(request,post):
-    p = Post.objects.get(id=post)
-    if request.method == "PUT":
-        data = json.loads(request.body)
-        content = data.get("content")
-        p.content=content
-        p.save()
-        return HttpResponse(status=204)
+    if request.user.is_authenticated:
+            
+        p = Post.objects.get(id=post)
+        if request.method == "PUT":
+            data = json.loads(request.body)
+            content = data.get("content")
+            p.content=content
+            p.save()
+            return HttpResponse(status=204)
+    else:
+        return render(request, "network/login.html")
 def follow(request, user):
     u = User.objects.get(username=user)
 
     f = Follower.objects.create(user=request.user, follows=u,follow_time=datetime.now)
     f.save()
+
 def profile(request, user, optional_param=None):
     if optional_param:
         pageNo=optional_param
@@ -137,40 +145,43 @@ def profile(request, user, optional_param=None):
     except:
         following = []
 
-    likes = calculatelikes(request,posts)
     text = "Follow User"
     for f in followers:
         if f.user == request.user:
             text="Unfollow"
 
     
-    paginatedPosts = Paginator(posts,2)
+    paginatedPosts = Paginator(posts,10)
     currentPage=paginatedPosts.page(pageNo)
     currentPagePosts=currentPage.object_list
     tupleList = createTupleList(request, currentPagePosts)
-
+   
     return render(request, "network/profile.html",{"followers":followers,"following":following,
                                                    "posts":posts,"user":u,"text":text,"tuples":tupleList,
-                                                   "paginator":paginatedPosts,"page1":'profile'})
+                                                   "paginator":paginatedPosts,"page1":'profile',"currentPage":currentPage})
 
 def following(request, optional_param=None):
-    if optional_param:
-        pageNo=optional_param
+    if not request.user.is_authenticated:
+        return render(request, "network/login.html")
     else:
-        pageNo=1
+
+        if optional_param:
+            pageNo=optional_param
+        else:
+            pageNo=1
 
 
-    posts=[]
-    following = Follower.objects.filter(user=request.user)
-    for f in following:
-        posts+= Post.objects.filter(creator=f.follows)
+        posts=[]
+        following = Follower.objects.filter(user=request.user)
+        for f in following:
+            posts+= Post.objects.filter(creator=f.follows)
 
-    paginatedPosts = Paginator(posts,2)
-    currentPage=paginatedPosts.page(pageNo)
-    currentPagePosts=currentPage.object_list
-    tupleList = createTupleList(request, currentPagePosts)
-    return render(request, "network/following.html",{"posts":posts,"following":following,"tuples":tupleList,
-                                                   "paginator":paginatedPosts,"page1":'following'})
+        paginatedPosts = Paginator(posts,10)
+        currentPage=paginatedPosts.page(pageNo)
+        currentPagePosts=currentPage.object_list
+        tupleList = createTupleList(request, currentPagePosts)
+        return render(request, "network/following.html",{"posts":posts,"following":following,"tuples":tupleList,
+                                                    "paginator":paginatedPosts,"page1":'following',"currentPage":currentPage})
 
 
 

@@ -23,22 +23,31 @@
 </script>
 
     <h1>All Posts</h1>
-    <div id = "post">
-        
-        <form method="post" >
-            {% csrf_token %}
-            <div class="form-row">
-                <h5>Create New Post</h5>
-            </div>
-            <div class="form-row">
-                <textarea name="post"type="text" cols="100" rows="5" placeholder="Type Your Post Here"></textarea>
-            </div>
+    {% if request.user.is_authenticated %}
+        <div id = "post">
             
-            <div class="form-row">    
-                <input type="submit" class="btn btn-primary" Post>
-            </div>
-          </form>
-    </div>
+            <form method="post" >
+                {% csrf_token %}
+                <div class="form-row">
+                    <h5>Create New Post</h5>
+                </div>
+                <div class="form-row">
+                    <textarea name="post"type="text" cols="100" rows="5" placeholder="Type Your Post Here"></textarea>
+                </div>
+                
+                <div class="form-row">    
+                    <input type="submit" class="btn btn-primary" Post>
+                </div>
+            </form>
+        </div>
+    
+    {% else %}
+        <h5 style="padding-left: 25px">Login to create your own Posts, and like others.</h5>
+        <br>
+
+    {% endif %}
+
+
     
     {% include "network/tupleLayout.html" %}
 {% endblock %}

@@ -17,11 +17,15 @@
             <a class="edit" data-postid={{tuple.0.id}} data-view={{htmlview}}>Edit</a>
         </div>
         {% endif %}
-        <div class="likecontainer">
+        <div class="likecontainer" >
             <span>{{ tuple.1 }}</span>
-            
-            <img src={{tuple.2}} data-likecount={{tuple.1}} data-postid={{tuple.0.id}} class="likeimg" width="15px">
-        </div>
+            {% if request.user.is_authenticated %}
+                <img src={{tuple.2}} data-likecount={{tuple.1}} data-postid={{tuple.0.id}} class="likeimg" width="15px">
+            {% else %}
+                <img src={{tuple.2}}  class="notloggedlikeimg" width="15px">
+        
+            {% endif %}
+        </div>    
     </div>
 
      <br>
@@ -29,23 +33,43 @@
 {% endfor %}
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-      </li>
-  
-      {% for page_number in paginator.page_range %}
-        {% if page1 == 'index' %}
-            <li class="page-item"><a class="page-link" href="{% url 'index' page_number %}">{{page_number}}</a></li>
-        {% elif page1 == 'profile' %}
-        <li class="page-item"><a class="page-link" href="{% url 'profile' user page_number %}">{{page_number}}</a></li>
+        {% if currentPage.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="{% url page1 currentPage.previous_page_number %}" tabindex="-1" aria-disabled="false">Previous</a>
+            </li>
         {% else %}
-        <li class="page-item"><a class="page-link" href="{% url 'following' page_number %}">{{page_number}}</a></li>
+            <li class="page-item disabled">
+                <a class="page-link" href="" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
         {% endif %}
-        
-      {% endfor %}
+      {% for page_number in paginator.page_range %}
+        {% if currentPage.number == page_number %}
+            {% if page1 == 'index' %}
+                <li class="page-item active" aria-current="page"><a class="page-link" href="{% url page1 %}">{{page_number}}<span class="sr-only">(current)</span></a></li>
+            {% elif page1 == 'profile' %}
+                <li class="page-item active" aria-current="page"><a class="page-link" href="{% url page1 user %}">{{page_number}}<span class="sr-only">(current)</span></a></li>
+            {% else %}
+                <li class="page-item active" aria-current="page"><span class="page-link" href="{% url page1 page_number %}">{{page_number}}<span class="sr-only">(current)</span></span></li>
+            {% endif %}
+        {% else %}
+            {% if page1 == 'index' %}
+                <li class="page-item"><a class="page-link" href="{% url page1 page_number %}">{{page_number}}</a></li>
+            {% elif page1 == 'profile' %}
+                <li class="page-item"><a class="page-link" href="{% url page1 user %}">{{page_number}}</a></li>
+            {% else %}
+             <li class="page-item"><a class="page-link" href="{% url page1 page_number %}">{{page_number}}</a></li>
+            {% endif %}
+        {% endif %}
     
-      <li class="page-item">
-        <a class="page-link" href="{% url 'index' %}">Next</a>
-      </li>
+      {% endfor %}
+      {% if currentPage.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{% url page1 currentPage.next_page_number %}">Next</a>
+            </li>
+       {% else %}
+            <li class="page-item disabled" aria-disabled="true">
+                <a class="page-link" href="">Next</a>
+            </li>
+      {% endif %} 
     </ul>
 </nav>

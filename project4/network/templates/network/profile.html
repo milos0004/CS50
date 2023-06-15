@@ -1,25 +1,26 @@
 {% extends "network/layout.html" %}
 {% block body %}
 <div class="container" id="post">
-    {% if user == request.user %}
+    {% if user == request.user or not request.user.is_authenticated %}
 
     {% else %}
+
         <form method="post" >
             {% csrf_token %}
             <div class="form-row">    
-                
                 <button id="following" type="submit" class="btn btn-link"> {{text}} </button>
             </div>
         </form>
     {% endif %}
     <div class="row" >
-        {{user.username}}
+        <br>
+        <h6>{{user.username}}'s Profile</h6>
     </div>
     <div class="row" >
         {{user.email}}
     </div>
     <div class="row" >
-        You Have {{followers|length}} Followers: 
+        Has {{followers|length}} Followers: 
         <br>
         {% for f in followers %}
             - {{f.user}}
@@ -27,7 +28,7 @@
         {% endfor %}
     </div>
     <div class="row" >
-        You are Following {{following|length}} Other Users: 
+        Is Following {{following|length}} Other Users: 
         <br>
         {% for f in following %}
             - {{f.follows}}
@@ -36,6 +37,6 @@
     </div>
     
 </div>
-
+<br>
 {% include "network/tupleLayout.html" %}
 {% endblock %}

@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
 })
 function like(event){
+    
+
     var imageElement = event.target;
     if(imageElement.src == 'https://i.ibb.co/k90YGq6/download-removebg-preview.png')
     {

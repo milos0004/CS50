@@ -1,1 +1,29 @@
+{% extends "newTab/layout.html" %}
+
+{% block body %}
+
 HEllo
+
+<div id="app"></div>
+
+
+
+<script type="text/babel">
+    function Hello(props) {
+        return(
+            null
+        );
+    }
+    function App() {
+        return (
+            
+            <Hello name="MILOS"/>
+            <div>heellloo</div>
+           
+        );
+    }
+
+    ReactDOM.render(<App />, document.querySelector("#app"));
+</script>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+{
+    
+    "django.snippets.exclude": [
+        
+        "cms",
+        "wagtail"
+    ],
+    "files.autoSave": "afterDelay"
+    
+}

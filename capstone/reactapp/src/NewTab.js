@@ -7,6 +7,11 @@ const NewTab = () => {
       <div>
         Today is a Study Day!!!
       </div>
+      <div>
+        <span>Morning</span>
+        <span>Afternoon</span>
+        <span>Evening</span>
+      </div>
     </BaseLayout>
   );
 };

@@ -1,0 +1,17 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "capstone/reactapp/.codesandbox /tasks.json": {
+      "name": "capstone/reactapp/.codesandbox /tasks.json",
+      "command": "capstone/reactapp/.codesandbox /tasks.json",
+      "runAtStart": true
+    },
+    "capstone/reactapp/.codesandbox/tasks.json setupTasks": {
+      "name": "capstone/reactapp/.codesandbox/tasks.json setupTasks",
+      "command": "capstone/reactapp/.codesandbox/tasks.json setupTasks"
+    }
+  }
+}
